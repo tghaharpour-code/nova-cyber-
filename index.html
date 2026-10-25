@@ -1,0 +1,275 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020805">
+<title>NOVA CYBER</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #020805;
+  color: #48ff91;
+  font-family: Tahoma, monospace, sans-serif;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+  background: #041109;
+  border: 1px solid #27d66b;
+  border-radius: 14px;
+  box-shadow: 0 0 35px #00ff4425;
+  overflow: hidden;
+}
+
+header {
+  padding: 18px;
+  background: #092515;
+  border-bottom: 1px solid #185b32;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  direction: ltr;
+}
+
+.logo {
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.online {
+  font-size: 12px;
+  color: #48ff91;
+}
+
+main { padding: 24px; }
+
+h1 {
+  text-align: center;
+  font-size: clamp(25px, 6vw, 38px);
+  letter-spacing: 3px;
+  text-shadow: 0 0 18px #00ff70;
+  direction: ltr;
+}
+
+.subtitle {
+  text-align: center;
+  color: #9bc9aa;
+  font-size: 12px;
+  margin-bottom: 26px;
+}
+
+.terminal {
+  min-height: 220px;
+  padding: 17px;
+  background: #010402;
+  border: 1px solid #19492a;
+  border-radius: 8px;
+  direction: ltr;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.line {
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0 0 8px;
+  color: #58ff9b;
+}
+
+.line::before {
+  content: "> ";
+  color: #00cfff;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  direction: ltr;
+  font-size: 12px;
+  margin: 22px 0 9px;
+}
+
+.track {
+  height: 8px;
+  background: #102619;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#bar {
+  width: 0;
+  height: 100%;
+  background: #48ff91;
+  box-shadow: 0 0 14px #48ff91;
+  transition: width .35s;
+}
+
+#result {
+  display: none;
+  text-align: center;
+  margin-top: 22px;
+  padding: 22px 12px;
+  border: 1px solid #48ff91;
+  border-radius: 10px;
+  animation: appear .8s ease;
+}
+
+#result h2 {
+  font-size: clamp(22px, 5vw, 30px);
+  text-shadow: 0 0 12px #00ff70;
+}
+
+#result p { line-height: 2; }
+
+button {
+  display: block;
+  margin: 23px auto 0;
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 7px;
+  background: #48ff91;
+  color: #031109;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+button:hover:not(:disabled) {
+  box-shadow: 0 0 20px #48ff91;
+}
+
+.notice {
+  text-align: center;
+  color: #9bc9aa;
+  font-size: 11px;
+  line-height: 2;
+  margin-top: 24px;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: scale(.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <header>
+    <div class="logo">NOVA // CYBER</div>
+    <div class="online">● SYSTEM ONLINE</div>
+  </header>
+
+  <main>
+    <h1>CYBER TERMINAL</h1>
+    <p class="subtitle">NOVA VISUAL SIMULATION INTERFACE</p>
+
+    <div class="terminal" id="terminal" aria-live="polite"></div>
+
+    <div class="progress-info">
+      <span>SIMULATION PROGRESS</span>
+      <span id="percent">0%</span>
+    </div>
+
+    <div class="track">
+      <div id="bar"></div>
+    </div>
+
+    <section id="result" aria-live="polite">
+      <h2>✓ هک با موفقیت انجام شد!</h2>
+      <p>از اعتمادتان متشکریم.</p>
+      <p dir="ltr">NOVA — SIMULATION COMPLETE</p>
+    </section>
+
+    <button id="restart" onclick="startSimulation()">
+      اجرای مجدد
+    </button>
+
+    <div class="notice">
+      NOVA CYBER · VISUAL DEMO<br>
+      این صفحه یک شبیه‌سازی نمایشی است؛ هیچ دستگاهی هک نشده و
+      هیچ اطلاعاتی از گوشی دریافت نمی‌شود.
+    </div>
+  </main>
+</div>
+
+<script>
+const messages = [
+  "NOVA terminal initialized.",
+  "Loading visual interface modules...",
+  "Checking browser environment...",
+  "Preparing simulation sequence...",
+  "Running visual animation...",
+  "Verifying demo status...",
+  "Simulation completed successfully."
+];
+
+let runNumber = 0;
+
+function pause(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function startSimulation() {
+  const currentRun = ++runNumber;
+  const terminal = document.getElementById("terminal");
+  const bar = document.getElementById("bar");
+  const percent = document.getElementById("percent");
+  const result = document.getElementById("result");
+  const button = document.getElementById("restart");
+
+  terminal.replaceChildren();
+  result.style.display = "none";
+  bar.style.width = "0%";
+  percent.textContent = "0%";
+  button.disabled = true;
+  button.textContent = "در حال اجرا...";
+
+  for (let i = 0; i < messages.length; i++) {
+    if (currentRun !== runNumber) return;
+
+    const line = document.createElement("p");
+    line.className = "line";
+    line.textContent = messages[i];
+    terminal.appendChild(line);
+
+    const value = Math.round((i + 1) / messages.length * 100);
+    bar.style.width = value + "%";
+    percent.textContent = value + "%";
+
+    await pause(850);
+  }
+
+  if (currentRun !== runNumber) return;
+
+  const line = document.createElement("p");
+  line.className = "line";
+  line.textContent = "DEMO ONLY — NO DEVICE ACCESS";
+  terminal.appendChild(line);
+
+  result.style.display = "block";
+  button.disabled = false;
+  button.textContent = "اجرای مجدد";
+}
+
+startSimulation();
+</script>
+</body>
+</html>
+```
